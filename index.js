@@ -81,10 +81,22 @@ C) REALTOR / PARTNER — they mention: realtor, agent, broker, referral, partner
 
 D) VAGUE / CONFUSED / SHORT / "I don't know" / "someone called me" / silence:
    → Ask ONLY: "Are you a homeowner right now?"
-     • YES → "Do you have any outstanding debt — credit cards, personal loans, or a car loan?"
-         - YES → Ask how much total. Then say: "A lot of people find that consolidating high-interest debt — credit cards are running 29 to 30 percent right now — can actually lower their total monthly payments even if their mortgage rate goes up a little. Would you be open to seeing what some extra cash at closing could do for you?" → If open: MORTGAGE INTAKE
-         - NO  → "Would you be interested in seeing what some extra cash at closing might look like — for home improvements, or just a cushion?" → If yes: MORTGAGE INTAKE
-     • NO → "Are you thinking about buying a home?"
+
+     • YES (they are a homeowner):
+         → Say: "I do have a request here — it looks like you may have been looking at some loan options. Does that ring a bell?"
+
+         - YES, they confirm → Acknowledge warmly and go directly to MORTGAGE INTAKE.
+
+         - NO, they deny / weren't looking:
+           → Say: "No worries at all! I actually wanted to reach out because a lot of homeowners are finding that by consolidating their high-interest debt — like credit cards, personal loans, or even a car loan — they're seeing a substantial decrease in their monthly outflow. And this can work even if you have a low interest rate on your current mortgage. How much debt are you currently holding right now?"
+           → Listen to their answer. If they share any amount (or even say "not much"):
+               - Acknowledge it and transition into MORTGAGE INTAKE to explore a cash-out refinance or debt consolidation refi.
+           → If they say none / zero debt:
+               - Say: "That's great! Would you be open to seeing what some extra cash at closing could look like — whether it's for home improvements, investing, or just building a cushion?"
+               - If open: MORTGAGE INTAKE
+
+     • NO (not a homeowner):
+         → "Are you thinking about buying a home?"
          - YES → "Would you like to see if you qualify for any Down Payment Assistance programs?" → DPA INTAKE or PURCHASE INTAKE
          - NO  → "Are you a real estate agent or in the real estate industry?" → If yes: BDM INTAKE
          - If none of the above → "No problem — can I take a message for Brandyn?" → PERSONAL / MESSAGE
