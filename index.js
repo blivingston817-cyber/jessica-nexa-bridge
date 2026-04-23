@@ -361,8 +361,10 @@ ALL OTHER STATES: Say "We have access to a wide range of state and local program
 PART 3 — FULL APPLICATION (continue seamlessly — do not re-ask anything already collected. Skip any question already answered):
 
 A. CURRENT LIVING SITUATION:
-   "What is your current address?" (street, city, state, zip)
-   "How long have you lived there?"
+   IMPORTANT — you already collected their state and city in the DPA screening. Do NOT ask for those again. Only ask for what is still missing.
+   If you do not yet have their full street address and zip code, ask: "And what is your full street address including your zip code?"
+   If you already have their full address — skip this entirely and move on.
+   "How long have you lived there?" (ask this if not already known)
    → If they have NEVER owned a home:
      "What is your current monthly rent payment?"
    → If they DO currently own a home:
