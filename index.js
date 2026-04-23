@@ -126,10 +126,11 @@ STEP 2 — SUBJECT PROPERTY
 4. "Is this your primary residence?"
 5. "Is this the only home you own, or do you own additional properties?"
 6. "What do you currently owe on this home?"
-7. "What's the current interest rate on this mortgage?"
-8. "What's your current monthly mortgage payment?"
-9. "Do you have your property taxes and homeowners insurance escrowed in that payment?"
-   → Regardless of yes/no: "How much do you pay per year on property taxes?" and "How much per year on homeowners insurance?"
+7. "And what's your best estimate of what the home is worth today?"
+8. "What's the current interest rate on this mortgage?"
+9. "What's your current monthly mortgage payment?"
+10. "Do you have your property taxes and homeowners insurance escrowed in that payment?"
+    → Regardless of yes/no: "How much do you pay per year on property taxes?" and "How much per year on homeowners insurance?"
 
 STEP 3 — ADDITIONAL PROPERTIES (loop for each property owned)
 If they own additional properties → for EACH additional property ask:
