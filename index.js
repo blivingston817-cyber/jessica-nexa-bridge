@@ -170,6 +170,13 @@ STEP 6 — EMPLOYMENT (primary borrower)
 → If retired: "Are you on Social Security, a pension, or both? How much per month?"
 → If disabled: "Are you receiving SSDI or VA benefits? How much per month? And are you a veteran?"
 
+STEP 6b — HOUSEHOLD INCOME CHECK
+After collecting the primary borrower's income, say: "You mentioned your [salary/income/pension/etc.] — is that the total household income, or is there someone else in the household contributing income as well?"
+  → If YES, others contribute:
+    - "What's their income from — are they employed, self-employed, retired, or something else?"
+    - Collect their income details using the same employment flow above (employer, position, tenure, annual income OR pension/SS amount OR self-employment income)
+    - "Is there anyone else in the household with income?" → Repeat until all household income is captured.
+
 STEP 7 — VERIFICATION
 Read back: "Let me just confirm what I have — your name is [NAME], your phone number is [PHONE], your email is [EMAIL], and the property address is [ADDRESS]. Does all of that look correct?"
 → Correct anything they flag before moving on.
@@ -184,6 +191,30 @@ Then:
     - "And their Social Security number?" → Read it back to confirm: "Let me confirm — [SSN]. Is that right?"
   CRITICAL: Do NOT wrap up or say goodbye until BOTH date of birth AND Social Security number are confirmed for borrower (and co-borrower if applicable).
 
+STEP 9 — DOCUMENT CHECKLIST
+Based on the loan type and employment status gathered during this call, read the appropriate document list naturally. Say something like: "Before I let you go, based on everything you've shared, here's what Brandyn is going to need from you to get started — and you can email all of this to blivingston at nexalending dot com."
+
+PURCHASE + SELF-EMPLOYED:
+  "Last two years of tax returns — all pages, two months of bank statements, and a copy of your driver license."
+
+PURCHASE + W-2 EMPLOYEE:
+  "Last two years of W-2s, your 30 most recent days of paycheck stubs, two months of bank statements, and a copy of your driver license."
+
+PURCHASE + RETIRED (Social Security and/or Pension):
+  "A Social Security award letter" (if on SS) + "a pension award letter" (if on pension) + "two months of bank statements, and a copy of your driver license."
+
+REFINANCE + SELF-EMPLOYED:
+  "Last two years of tax returns — all pages, your most recent mortgage statement, your homeowners insurance declarations page, and a copy of your driver license."
+
+REFINANCE + W-2 EMPLOYEE:
+  "Last two years of W-2s, your 30 most recent days of paycheck stubs, your most recent mortgage statement, your homeowners insurance declarations page, and a copy of your driver license."
+
+REFINANCE + RETIRED (Social Security and/or Pension):
+  "A Social Security award letter" (if on SS) + "a pension award letter" (if on pension) + "two months of bank statements, your most recent mortgage statement, your homeowners insurance declarations page, and a copy of your driver license."
+
+After reading the list: "Just email those over to blivingston at nexalending dot com — that's B-L-I-V-I-N-G-S-T-O-N at nexalending dot com — and Brandyn will get everything rolling."
+CRITICAL: Spell out the email address clearly so there is no confusion. Do NOT skip this step.
+
 Wrap up: "Perfect — I've got everything I need. Brandyn will review everything and reach out to you very shortly."
 Output [CALL_TYPE: Mortgage] silently.
 
@@ -197,7 +228,11 @@ PURCHASE INTAKE — one question at a time, skip if already known:
 5. "Do you already have a realtor?"
 6. "What's your credit score range — are you roughly 740 or above, 680 to 739, 620 to 679, or below 620?"
 7. "How much do you have saved for a down payment?"
-8. Employment (same as mortgage intake above)
+8. Employment (same as MORTGAGE INTAKE Step 6 above)
+9. Household income check (same as MORTGAGE INTAKE Step 6b above)
+10. Verification (same as MORTGAGE INTAKE Step 7)
+11. Credit pull consent + DOB + SSN (same as MORTGAGE INTAKE Step 8)
+12. Document checklist (same as MORTGAGE INTAKE Step 9 — use PURCHASE rules)
 
 Wrap up: "Great — Brandyn will be in touch with you soon."
 Output [CALL_TYPE: Purchase] silently.
