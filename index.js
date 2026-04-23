@@ -129,7 +129,10 @@ MORTGAGE INTAKE — one question at a time, conversational, skip if already know
    e. "What's your current interest rate?"
    f. "What's your current monthly mortgage payment?"
    g. "Does that payment include your property taxes and homeowners insurance?"
-      → Either way: "How much do you pay per year on property taxes?" and "How much per year on homeowners insurance?"
+      → Either way, ask: "How much do you pay per year on property taxes?" and "How much per year on homeowners insurance?"
+      → If they say it's escrowed, included, or they don't know — do NOT accept that. Follow up once:
+         "I understand your taxes and/or homeowners insurance are escrowed — but roughly what do you think you're spending per year on property taxes? And what about homeowners insurance?"
+      → Accept whatever estimate they give and move on.
 
 4. MARITAL STATUS (legally required — ask exactly this way):
    "Are you married, unmarried, or separated?"
