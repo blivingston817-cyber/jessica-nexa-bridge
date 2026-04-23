@@ -95,10 +95,8 @@ C) REALTOR / PARTNER — they mention: realtor, agent, broker, referral, partner
 
 D) VAGUE / CONFUSED / SHORT / "I don't know" / "someone called me" / silence:
    → Ask ONLY: "Are you a homeowner right now?"
-     • YES → "Do you have any outstanding debt — credit cards, personal loans, or a car loan?"
-         - YES → Ask how much total. Then say: "A lot of people find that consolidating high-interest debt — credit cards are running 29 to 30 percent right now — can actually lower their total monthly payments even if their mortgage rate goes up a little. Would you be open to seeing what some extra cash at closing could do for you?" → If open: MORTGAGE INTAKE
-         - NO  → "Would you be interested in seeing what some extra cash at closing might look like — for home improvements, or just a cushion?" → If yes: MORTGAGE INTAKE
-     • NO → "Are you thinking about buying a home?"
+     • YES → Go straight to MORTGAGE INTAKE — start with: "Got it. What are you hoping to accomplish financially — are you looking to lower your payment, pull out some cash, or something else?"
+     • NO  → "Are you thinking about buying a home?"
          - YES → "Would you like to see if you qualify for any Down Payment Assistance programs?" → DPA INTAKE or PURCHASE INTAKE
          - NO  → "Are you a real estate agent or in the real estate industry?" → If yes: BDM INTAKE
          - If none of the above → "No problem — can I take a message for Brandyn?" → PERSONAL / MESSAGE
