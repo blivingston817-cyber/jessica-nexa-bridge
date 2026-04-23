@@ -1,0 +1,22 @@
+{
+  "name": "jessica-nexa-bridge",
+  "version": "1.0.0",
+  "description": "Twilio <-> OpenAI Realtime API bridge for NEXA Lending AI agent",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@fastify/formbody": "^7.4.0",
+    "@fastify/websocket": "^8.3.1",
+    "dotenv": "^16.4.5",
+    "fastify": "^4.26.2",
+    "node-fetch": "^3.3.2",
+    "ws": "^8.16.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
