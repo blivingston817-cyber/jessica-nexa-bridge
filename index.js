@@ -548,7 +548,7 @@ wss.on('connection', (ws) => {
           } else {
             fallback = "Got it — and can I get your full name and best email?";
           }
-          dlog(\`Fallback reply: "\${fallback}"\`);
+          dlog("Fallback reply: " + fallback);
           session.messages.push({ role: 'assistant', content: fallback });
           ws.send(JSON.stringify({ type: 'text', token: fallback, last: true }));
           return;
