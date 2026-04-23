@@ -1,0 +1,70 @@
+{
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "profession": {
+      "type": "string",
+      "description": "Realtor, CPA, financial advisor, builder, marketer, etc."
+    },
+    "brokerage_or_company": {
+      "type": "string"
+    },
+    "years_in_business": {
+      "type": "string"
+    },
+    "licensed_states": {
+      "type": "string"
+    },
+    "avg_transactions_per_year": {
+      "type": "string"
+    },
+    "avg_loan_amount": {
+      "type": "string"
+    },
+    "currently_referring": {
+      "type": "string",
+      "description": "Are they currently referring loans to a lender?"
+    },
+    "current_lender": {
+      "type": "string"
+    },
+    "motivation": {
+      "type": "string",
+      "description": "Why interested in BDM program"
+    },
+    "callback_requested": {
+      "type": "boolean"
+    },
+    "callback_time": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "New",
+        "Callback Scheduled",
+        "Contacted",
+        "Enrolled",
+        "Not Interested"
+      ],
+      "default": "New"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "tag": {
+      "type": "string",
+      "default": "BDM Inquiry"
+    }
+  },
+  "required": [],
+  "name": "BDMLead"
+}

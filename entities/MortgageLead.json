@@ -1,0 +1,130 @@
+{
+  "type": "object",
+  "properties": {
+    "call_type": {
+      "type": "string",
+      "enum": [
+        "mortgage",
+        "bdm",
+        "dpa"
+      ],
+      "description": "Type of call"
+    },
+    "caller_phone": {
+      "type": "string"
+    },
+    "caller_name": {
+      "type": "string"
+    },
+    "caller_email": {
+      "type": "string"
+    },
+    "loan_type": {
+      "type": "string"
+    },
+    "loan_amount": {
+      "type": "number"
+    },
+    "goal": {
+      "type": "string"
+    },
+    "property_type": {
+      "type": "string"
+    },
+    "property_address": {
+      "type": "string"
+    },
+    "property_city": {
+      "type": "string"
+    },
+    "property_state": {
+      "type": "string"
+    },
+    "property_zip": {
+      "type": "string"
+    },
+    "amount_owed": {
+      "type": "number"
+    },
+    "current_interest_rate": {
+      "type": "number"
+    },
+    "current_mortgage_payment": {
+      "type": "number"
+    },
+    "taxes_insurance_included": {
+      "type": "string"
+    },
+    "annual_property_taxes": {
+      "type": "number"
+    },
+    "annual_homeowners_insurance": {
+      "type": "number"
+    },
+    "employment_status": {
+      "type": "string"
+    },
+    "employer_name": {
+      "type": "string"
+    },
+    "years_employed": {
+      "type": "number"
+    },
+    "annual_income": {
+      "type": "number"
+    },
+    "years_in_business": {
+      "type": "number"
+    },
+    "taxable_income_last_year": {
+      "type": "number"
+    },
+    "taxable_income_year_before": {
+      "type": "number"
+    },
+    "self_employed_loan_type": {
+      "type": "string"
+    },
+    "credit_score_range": {
+      "type": "string"
+    },
+    "has_realtor": {
+      "type": "string"
+    },
+    "down_payment": {
+      "type": "number"
+    },
+    "home_value": {
+      "type": "number"
+    },
+    "purchase_timeline": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "recording_url": {
+      "type": "string"
+    },
+    "call_transcript": {
+      "type": "string"
+    },
+    "sync_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "synced",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "leadflow_id": {
+      "type": "string"
+    },
+    "mortgageflow_id": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "MortgageLead"
+}

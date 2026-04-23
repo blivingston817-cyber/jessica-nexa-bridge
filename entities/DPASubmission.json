@@ -1,0 +1,82 @@
+{
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "phone_number": {
+      "type": "string"
+    },
+    "email_address": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "county_or_parish": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "occupancy": {
+      "type": "string"
+    },
+    "owned_home_last_3_years": {
+      "type": "string"
+    },
+    "veteran_or_active_military": {
+      "type": "string"
+    },
+    "first_generation_homebuyer": {
+      "type": "string"
+    },
+    "current_california_resident": {
+      "type": "string"
+    },
+    "household_size": {
+      "type": "string"
+    },
+    "annual_household_income": {
+      "type": "number"
+    },
+    "borrower_qualifying_income": {
+      "type": "number"
+    },
+    "estimated_middle_credit_score": {
+      "type": "string"
+    },
+    "estimated_dti": {
+      "type": "string"
+    },
+    "liquid_assets_after_closing": {
+      "type": "number"
+    },
+    "purchase_price": {
+      "type": "number"
+    },
+    "loan_type": {
+      "type": "string"
+    },
+    "property_type": {
+      "type": "string"
+    },
+    "flood_zone": {
+      "type": "string"
+    },
+    "will_complete_homebuyer_education": {
+      "type": "string"
+    },
+    "matched_programs": {
+      "type": "string"
+    },
+    "overall_result_status": {
+      "type": "string"
+    },
+    "notification_sent": {
+      "type": "boolean"
+    }
+  },
+  "required": [],
+  "name": "DPASubmission"
+}
