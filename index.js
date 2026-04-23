@@ -130,9 +130,13 @@ MORTGAGE INTAKE — one question at a time, conversational, skip if already know
    f. "What's your current interest rate?"
    g. "What's your current monthly mortgage payment?"
    h. "Does that payment include your property taxes and homeowners insurance?"
-      → Either way, ask: "How much do you pay per year on property taxes?" and "How much per year on homeowners insurance?"
-      → If they say it's escrowed, included, or they don't know — do NOT accept that. Follow up once:
-         "I understand your taxes and/or homeowners insurance are escrowed — but roughly what do you think you're spending per year on property taxes? And what about homeowners insurance?"
+   i. "How much do you pay per year on property taxes?"
+      → If they say it's escrowed or they don't know — follow up once:
+         "I understand your property taxes are escrowed — but roughly what do you think you're spending per year on property taxes?"
+      → Accept whatever estimate they give and move on.
+   j. "And how much do you pay per year on homeowners insurance?"
+      → If they say it's escrowed or they don't know — follow up once:
+         "I understand your homeowners insurance is escrowed — roughly what do you think you're spending per year on that?"
       → Accept whatever estimate they give and move on.
 
 4. ADDITIONAL PROPERTIES:
@@ -149,8 +153,12 @@ MORTGAGE INTAKE — one question at a time, conversational, skip if already know
           - "What's the interest rate on that mortgage?"
           - "What's the monthly mortgage payment?"
           - "Does that payment include property taxes and homeowners insurance?"
-            → Either way: "How much per year on property taxes?" and "How much per year on homeowners insurance?"
-            → If escrowed/unknown → follow up once: "I understand it's escrowed — roughly what do you think you're spending per year on taxes? And homeowners insurance?"
+          - "How much do you pay per year on property taxes on that property?"
+            → If escrowed/unknown → follow up once: "I understand it's escrowed — roughly what do you think you're spending per year on property taxes there?"
+            → Accept estimate and move on.
+          - "And how much per year on homeowners insurance on that property?"
+            → If escrowed/unknown → follow up once: "Roughly what do you think you're spending per year on homeowners insurance there?"
+            → Accept estimate and move on.
         → NO → continue
      d. After each property: "Do you own any other properties?"
         → Keep looping until they say no more properties.
@@ -165,9 +173,14 @@ MORTGAGE INTAKE — one question at a time, conversational, skip if already know
      b. "Will they also be living in this home as their primary residence?"
         - NO → "What is their current address?"
      c. "Are they currently employed, self-employed, or retired?"
-        → Employed: "Where do they work, how long have they been there, and what's their position?" / "What's their annual income?" / "Any other sources of income?"
+        → Employed:
+           "Who is their current employer?"
+           "How long have they worked there?"
+           "And what's their position or title?"
+           "What's their annual income?"
+           "Do they have any other sources of income?"
         → Self-employed: same self-employed flow as primary borrower below
-        → Retired: same retired flow as primary borrower below
+        → Retired: same step-by-step retired flow as primary borrower — ask pension and Social Security amounts separately
      d. "Do they have any other sources of income they'd like to include?"
    → NO → continue
 
@@ -175,7 +188,9 @@ MORTGAGE INTAKE — one question at a time, conversational, skip if already know
    "Are you currently working, self-employed, or retired?"
 
    → EMPLOYED:
-     "Where do you work, how long have you been there, and what's your position?"
+     "Who is your current employer?"
+     "How long have you worked there?"
+     "And what's your position or title?"
      "What's your annual income?"
      "Do you have any other sources of income you'd like to include?"
 
@@ -188,7 +203,13 @@ MORTGAGE INTAKE — one question at a time, conversational, skip if already know
 
    → RETIRED:
      "Are you receiving a pension, Social Security, or both?"
-     "How much do you receive per month?"
+     → If BOTH:
+       "How much do you receive per month from your pension?"
+       "And how much do you receive per month from Social Security?"
+     → If PENSION only:
+       "How much do you receive per month from your pension?"
+     → If SOCIAL SECURITY only:
+       "How much do you receive per month from Social Security?"
      "Do you have any other sources of income you'd like to include — like rental income, investments, or anything else?"
 
    → DISABLED:
