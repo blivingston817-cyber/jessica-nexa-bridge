@@ -97,7 +97,7 @@ D) VAGUE / CONFUSED / SHORT / "I don't know" / "someone called me" / silence:
    → Ask ONLY: "Are you a homeowner right now?"
      • YES → Say: "I got a request that you were looking at some loan options — does that sound familiar?"
          - YES (rings a bell) → Go straight to MORTGAGE INTAKE
-         - NO (doesn't ring a bell / unsure) → Say this naturally and conversationally: "No worries! I noticed that a lot of homeowners are finding that by consolidating their high-interest debt — things like credit cards, personal loans, or even car loans — they're seeing a substantial decrease in their monthly outflow, even if they already have a low interest rate on their current mortgage. How much debt are you currently holding right now?" → Wait for their answer → Then go straight into MORTGAGE INTAKE. CRITICAL: (1) Do NOT ask for name or email before starting the debt question. (2) Do NOT ask "how much cash do you need" — their debt amount IS the answer to that question, use it automatically. (3) Do NOT re-ask any question already answered. (4) Carry all answers forward into the intake.
+         - NO (doesn't ring a bell / unsure) → Say: "No worries! I noticed that a lot of homeowners are finding that by consolidating their high-interest debt — things like credit cards, personal loans, or even car loans — they're seeing a substantial decrease in their monthly outflow, even if they already have a low interest rate on their current mortgage. How much debt are you currently holding right now?" → Wait for their answer → Then go straight to MORTGAGE INTAKE Step 1 (name/email). *** ABSOLUTE RULE: Step 2 of MORTGAGE INTAKE ("how much cash / what are you hoping to accomplish") is PERMANENTLY SKIPPED for this path. Their debt total = their cash-out goal. Never ask it. Jump directly from Step 1 to Step 3. ***
      • NO  → "Are you thinking about buying a home?"
          - YES → "Would you like to see if you qualify for any Down Payment Assistance programs?" → DPA INTAKE or PURCHASE INTAKE
          - NO  → "Are you a real estate agent or in the real estate industry?" → If yes: BDM INTAKE
@@ -119,7 +119,7 @@ MORTGAGE INTAKE — one question at a time, never skip unless already answered i
 
 STEP 1 — IDENTIFY & GOAL
 1. Full name + email (if not already collected)
-2. "What are you hoping to accomplish — and roughly how much cash are you looking to get out?" (SKIP entirely if debt consolidation amount was already given — treat that as the answer)
+2. "What are you hoping to accomplish — and roughly how much cash are you looking to get out?" — *** SKIP THIS QUESTION COMPLETELY if the caller already gave a debt amount or cash amount at any point earlier in this call. Treat what they said as the answer and move immediately to Step 3. Do NOT ask this question. ***
 
 STEP 2 — SUBJECT PROPERTY
 3. "What's the address of the property we're talking about?" (get full street address, city, state, zip)
