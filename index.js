@@ -294,8 +294,23 @@ RULES:
 }
 
 // ─── GPT-4o ───────────────────────────────────────────────────────────────────
-async function chatWithGPT(messages, systemPrompt, attempt = 0) {
+async function chatWithGPT(messages, systemPrompt, attempt = 0, session = null) {
   try {
+    // Build a live context injection so the AI knows what it has collected so far
+    let liveContext = '';
+    if (session) {
+      const info = session.leadInfo || {};
+      const parts = [];
+      if (info.name) parts.push(`Caller name collected: ${info.name}`);
+      if (info.email) parts.push(`Caller email collected: ${info.email}`);
+      if (session.callerPhone && session.callerPhone !== 'unknown') parts.push(`Caller phone: ${session.callerPhone}`);
+      if (parts.length > 0) {
+        liveContext = `\n\n[LIVE SESSION DATA — use these exact values when verifying or reading back information:\n${parts.join('\n')}]`;
+      }
+    }
+
+    const fullSystemPrompt = systemPrompt + liveContext;
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -304,7 +319,7 @@ async function chatWithGPT(messages, systemPrompt, attempt = 0) {
       },
       body: JSON.stringify({
         model: 'gpt-4o',
-        messages: [{ role: 'system', content: systemPrompt }, ...messages.slice(-12)],
+        messages: [{ role: 'system', content: fullSystemPrompt }, ...messages.slice(-12)],
         temperature: 0.2,
         max_tokens: 80,
       }),
@@ -312,7 +327,7 @@ async function chatWithGPT(messages, systemPrompt, attempt = 0) {
     if (response.status === 429 && attempt === 0) {
       dlog('OpenAI 429 rate limit — retrying in 2s');
       await new Promise(r => setTimeout(r, 2000));
-      return chatWithGPT(messages, systemPrompt, 1);
+      return chatWithGPT(messages, systemPrompt, 1, session);
     }
     const data = await response.json();
     if (data.error) {
@@ -346,8 +361,10 @@ async function sendEmailViaProxy(to, subject, html) {
 
 async function sendCallSummaryEmail(session) {
   const { callerPhone, leadInfo, messages, callType, callStartTime } = session;
-  const callerName = leadInfo?.name || 'Unknown';
-  const callerEmail = leadInfo?.email || 'N/A';
+  // Final extraction pass — make sure we have name/email from the full transcript
+  extractLeadInfoFromMessages(session);
+  const callerName = session.leadInfo?.name || leadInfo?.name || 'Unknown';
+  const callerEmail = session.leadInfo?.email || leadInfo?.email || 'N/A';
   const callTime = (callStartTime || new Date()).toLocaleString('en-US', { timeZone: 'America/Phoenix' });
 
   const transcript = messages
@@ -455,6 +472,42 @@ async function saveLeadToBase44(session) {
     else dlog(`Lead save error: ${await saveRes.text()}`);
   } catch (err) {
     console.error('saveLeadToBase44 error:', err);
+  }
+}
+
+// ─── Live lead info extraction from transcript ────────────────────────────────
+function extractLeadInfoFromMessages(session) {
+  try {
+    const transcript = session.messages
+      .filter(m => m.role !== 'system')
+      .map(m => m.content)
+      .join(' ');
+
+    if (!session.leadInfo) session.leadInfo = {};
+
+    // Extract name — look for patterns like "my name is X" or Jessica confirming "your name is X"
+    if (!session.leadInfo.name) {
+      const namePatterns = [
+        /(?:my name is|i(?:'m| am)|this is)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})/i,
+        /(?:your name is|name is)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})/i,
+        /(?:call me|it(?:'s| is))\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/i,
+      ];
+      for (const re of namePatterns) {
+        const m = transcript.match(re);
+        if (m && m[1] && m[1].length > 2) {
+          session.leadInfo.name = m[1].trim();
+          break;
+        }
+      }
+    }
+
+    // Extract email
+    if (!session.leadInfo.email) {
+      const emailMatch = transcript.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/);
+      if (emailMatch) session.leadInfo.email = emailMatch[0].toLowerCase();
+    }
+  } catch (e) {
+    // non-critical, swallow
   }
 }
 
@@ -610,7 +663,7 @@ wss.on('connection', (ws) => {
         session.messages.push({ role: 'user', content: userText });
 
         // Get GPT-4o response
-        const aiRaw = await chatWithGPT(session.messages, session.systemPrompt);
+        const aiRaw = await chatWithGPT(session.messages, session.systemPrompt, 0, session);
         dlog(`Jessica raw: "${aiRaw}"`);
 
         // If GPT returned null (rate limit / error), pick a smart bridge phrase
@@ -652,6 +705,9 @@ wss.on('connection', (ws) => {
 
         const visibleReply = stripTokens(aiRaw);
         session.messages.push({ role: 'assistant', content: visibleReply });
+
+        // ── Live extraction: pull name/email/phone from transcript as they're collected ──
+        extractLeadInfoFromMessages(session);
 
         ws.send(JSON.stringify({ type: 'text', token: visibleReply, last: true }));
         return;
