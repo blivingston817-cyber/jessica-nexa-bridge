@@ -128,7 +128,7 @@ MORTGAGE INTAKE — one question at a time, conversational, skip if already know
     → If NO — you will still need to ask for their current living address separately in Part 3.
  c. "What's the approximate value of the home?"
  d. "What do you currently owe on it?"
- e. "How long have you lived there?"
+ e. "And how long have you been at that address?" — if they seem unsure just accept a rough estimate like "about two years" or "around five years" and move on immediately
  f. "What's your current interest rate?"
  g. "What's your current monthly mortgage payment?"
  h. "Does that payment include your property taxes and homeowners insurance?"
@@ -366,7 +366,7 @@ A. CURRENT LIVING SITUATION:
    IMPORTANT — you already collected their state and city in the DPA screening. Do NOT ask for those again. Only ask for what is still missing.
    If you do not yet have their full street address and zip code, ask: "And what is your full street address including your zip code?"
    If you already have their full address — skip this entirely and move on.
-   "How long have you lived there?" (ask this if not already known)
+   "And how long have you been at that address?" — accept any rough estimate, move on immediately
    → If they have NEVER owned a home:
      "What is your current monthly rent payment?"
    → If they DO currently own a home:
@@ -763,7 +763,7 @@ fastify.post('/incoming-call', async (req, reply) => {
  transcriptionProvider="deepgram"
  speechModel="nova-3-general"
  interruptible="dtmf"
- hints="refinance,mortgage,NEXA,FHA,VA,USDA,conventional,down payment,escrow,homeowners insurance,property taxes,W-2,pay stubs,bank statements,pre-approval,credit score,interest rate,cash out,home equity,HELOC,self-employed,Social Security,pension,taxable income,bank statement loan,profit and loss,co-borrower,primary residence,investment property,driver license,declarations page,loan officer,Brandyn,Livingston,nexalending" />
+ hints="refinance,mortgage,NEXA,FHA,VA,USDA,conventional,down payment,escrow,homeowners insurance,property taxes,W-2,pay stubs,bank statements,pre-approval,credit score,interest rate,cash out,home equity,HELOC,self-employed,Social Security,pension,taxable income,bank statement loan,profit and loss,co-borrower,primary residence,investment property,driver license,declarations page,loan officer,Brandyn,Livingston,nexalending,one year,two years,three years,four years,five years,six years,seven years,eight years,nine years,ten years,about a year,less than a year,six months,about six months,almost two years,over three years,around five years" />
  </Connect>
 </Response>`;
 
