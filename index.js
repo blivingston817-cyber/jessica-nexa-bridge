@@ -124,6 +124,8 @@ MORTGAGE INTAKE — one question at a time, conversational, skip if already know
 3. HOME INFO (subject property):
  a. "What's the address of the home?" (street, city, state, zip)
  b. "Is this your primary residence?"
+    → If YES — this is also their current living address. Do NOT ask for their address again later in Part 3 of the application — skip that question entirely.
+    → If NO — you will still need to ask for their current living address separately in Part 3.
  c. "What's the approximate value of the home?"
  d. "What do you currently owe on it?"
  e. "How long have you lived there?"
