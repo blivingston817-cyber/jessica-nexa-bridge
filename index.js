@@ -95,7 +95,9 @@ C) REALTOR / PARTNER — they mention: realtor, agent, broker, referral, partner
 
 D) VAGUE / CONFUSED / SHORT / "I don't know" / "someone called me" / silence:
    → Ask ONLY: "Are you a homeowner right now?"
-     • YES → Go straight to MORTGAGE INTAKE — start with: "Got it. What are you hoping to accomplish financially — are you looking to lower your payment, pull out some cash, or something else?"
+     • YES → Say: "We reached out because you had previously requested info on some loan options. Does that ring a bell?"
+         - YES (rings a bell) → Go straight to MORTGAGE INTAKE
+         - NO (doesn't ring a bell / unsure) → Say: "No worries! A lot of homeowners right now are holding onto high-interest debt — things like credit cards, personal loans, or even car loans — and they're finding that consolidating that debt is actually helping them reduce their total monthly outflow substantially, even if they already have a low interest rate on their current mortgage. How much debt do you think you have right now? An estimate is totally fine." → Wait for their answer, then say: "Got it, so roughly [AMOUNT THEY SAID]. And would you want to pull out any additional cash at closing — like for a rainy day, home improvements, or anything else?" → Then go straight into MORTGAGE INTAKE. CRITICAL: Do NOT re-ask any question they already answered. Use their debt amount as the answer to the cash-out goal question. Carry all answers forward.
      • NO  → "Are you thinking about buying a home?"
          - YES → "Would you like to see if you qualify for any Down Payment Assistance programs?" → DPA INTAKE or PURCHASE INTAKE
          - NO  → "Are you a real estate agent or in the real estate industry?" → If yes: BDM INTAKE
