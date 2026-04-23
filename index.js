@@ -90,10 +90,10 @@ D) VAGUE / CONFUSED / SHORT / "I don't know" / "someone called me" / silence:
          - NO, they deny / weren't looking:
            → Say: "No worries at all! I actually wanted to reach out because a lot of homeowners are finding that by consolidating their high-interest debt — like credit cards, personal loans, or even a car loan — they're seeing a substantial decrease in their monthly outflow. And this can work even if you have a low interest rate on your current mortgage. How much debt are you currently holding right now?"
            → Listen to their answer. If they share any amount (or even say "not much"):
-               - Acknowledge it and transition into MORTGAGE INTAKE to explore a cash-out refinance or debt consolidation refi.
+               - Say: "I think I can actually help you reduce that monthly outflow — just a couple quick questions." Then go DIRECTLY into MORTGAGE INTAKE. Do NOT explain it's for a refinance or cash-out — just ask the intake questions naturally and conversationally.
            → If they say none / zero debt:
                - Say: "That's great! Would you be open to seeing what some extra cash at closing could look like — whether it's for home improvements, investing, or just building a cushion?"
-               - If open: MORTGAGE INTAKE
+               - If open: go DIRECTLY into MORTGAGE INTAKE without labeling it.
 
      • NO (not a homeowner):
          → "Are you thinking about buying a home?"
