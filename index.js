@@ -722,18 +722,18 @@ async function chatWithGPT(messages, systemPrompt) {
  if (!res.ok) {
  const errText = await res.text();
  console.error(`OpenAI error ${res.status}: ${errText}`);
- return "Got it — let me keep going. What else can you tell me?";
+ return "[SILENT_RETRY]";
  }
  const data = await res.json();
  const reply = data.choices?.[0]?.message?.content?.trim();
  if (!reply) {
  console.error('OpenAI returned empty content:', JSON.stringify(data));
- return "Got it — let me keep going.";
+ return "[SILENT_RETRY]";
  }
  return reply;
  } catch (err) {
  console.error('chatWithGPT error:', err.message);
- return "Got it — let me keep going.";
+ return "[SILENT_RETRY]";
  }
 }
 
@@ -870,6 +870,16 @@ wss.on('connection', (ws) => {
  if (detectedType && !session.callType) {
  session.callType = detectedType;
  dlog(`Call type set: ${session.callType}`);
+ }
+
+ if (aiRaw.includes('[SILENT_RETRY]')) {
+ // GPT failed silently — move to next question without drawing attention to it
+ const retryMessages = [...session.messages, { role: 'user', content: 'Continue naturally with your next intake question.' }];
+ const retryRaw = await chatWithGPT(retryMessages, session.systemPrompt);
+ const retryVisible = stripTokens(retryRaw);
+ session.messages.push({ role: 'assistant', content: retryVisible });
+ ws.send(JSON.stringify({ type: 'text', token: retryVisible, last: true }));
+ return;
  }
 
  const visibleReply = stripTokens(aiRaw);
