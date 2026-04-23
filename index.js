@@ -704,18 +704,37 @@ function detectCallType(text) {
 
 // ─── GPT-4o chat ──────────────────────────────────────────────────────────────
 async function chatWithGPT(messages, systemPrompt) {
+ try {
+ const controller = new AbortController();
+ const timeout = setTimeout(() => controller.abort(), 9000);
  const res = await fetch('https://api.openai.com/v1/chat/completions', {
  method: 'POST',
+ signal: controller.signal,
  headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
  body: JSON.stringify({
  model: 'gpt-4o',
- temperature: 0.5,
+ temperature: 0.4,
  max_tokens: 300,
  messages: [{ role: 'system', content: systemPrompt }, ...messages],
  }),
  });
+ clearTimeout(timeout);
+ if (!res.ok) {
+ const errText = await res.text();
+ console.error(`OpenAI error ${res.status}: ${errText}`);
+ return "Got it — let me keep going. What else can you tell me?";
+ }
  const data = await res.json();
- return data.choices?.[0]?.message?.content?.trim() || "I'm sorry, I didn't catch that. Could you repeat that?";
+ const reply = data.choices?.[0]?.message?.content?.trim();
+ if (!reply) {
+ console.error('OpenAI returned empty content:', JSON.stringify(data));
+ return "Got it — let me keep going.";
+ }
+ return reply;
+ } catch (err) {
+ console.error('chatWithGPT error:', err.message);
+ return "Got it — let me keep going.";
+ }
 }
 
 // ─── Fastify setup ────────────────────────────────────────────────────────────
