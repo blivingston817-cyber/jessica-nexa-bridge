@@ -18,7 +18,8 @@ const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER || '+18339883514';
 const BASE44_API_KEY = process.env.BASE44_API_KEY;
 const LEADFLOW_APP_ID = '69cfe4f5a8d6d5273ce84a33';
 const JESSICA_APP_ID = '69c8bc2a8e7923547ee56685';
-const BASE44_FUNC_BASE = `https://api.base44.com/api/apps/${JESSICA_APP_ID}/functions`;
+// ✅ Fixed URL — was pointing to api.base44.com which returns Wix 404
+const BASE44_FUNC_BASE = `https://jessica-7ee56685.base44.app/functions`;
 
 // ─── Debug logs ───────────────────────────────────────────────────────────────
 const debugLogs = [];
@@ -33,49 +34,34 @@ function dlog(msg) {
 // keyed by callSid
 const sessions = new Map();
 
-// ─── LeadFlow lookup ──────────────────────────────────────────────────────────
-async function lookupLeadByPhone(phone) {
+// ─── Lead lookup ─────────────────────────────────────────────────────────────
+async function lookupLead(phone) {
   if (!BASE44_API_KEY) return null;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 1500);
   try {
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), 5000);
-    const digits = phone.replace(/\D/g, '');
-    const ten = digits.slice(-10);
-    const formats = [phone, `+1${ten}`, ten];
-    for (const fmt of formats) {
-      const res = await fetch(
-        `https://api.base44.com/api/apps/${LEADFLOW_APP_ID}/entities/Lead?phone=${encodeURIComponent(fmt)}`,
-        { headers: { 'api-key': BASE44_API_KEY }, signal: controller.signal }
-      );
-      if (!res.ok) continue;
-      const data = await res.json();
-      const records = Array.isArray(data) ? data : data.records || [];
-      if (records.length > 0) {
-        const l = records[0];
-        return { name: l.consumer || null, email: l.email || null };
-      }
-    }
-  } catch (_) {}
-  return null;
+    const r = await fetch(
+      `https://api.base44.com/api/apps/${LEADFLOW_APP_ID}/entities/Consumer?phone=${encodeURIComponent(phone)}&limit=1`,
+      { headers: { 'api-key': BASE44_API_KEY }, signal: controller.signal }
+    );
+    clearTimeout(timeout);
+    if (!r.ok) return null;
+    const data = await r.json();
+    const l = Array.isArray(data) ? data[0] : data?.items?.[0];
+    if (!l) return null;
+    return { name: l.consumer || null, email: l.email || null };
+  } catch { return null; }
 }
 
-// ─── System prompt ────────────────────────────────────────────────────────────
-function buildSystemPrompt(lead) {
-  const known = lead
-    ? `This caller is already in our system — Name: ${lead.name}, Email: ${lead.email}. Use their first name in your greeting. Do NOT ask for their name or email again.`
+// ─── System prompt builder ───────────────────────────────────────────────────
+function buildSystemPrompt(leadInfo) {
+  const knownCallerNote = leadInfo
+    ? `This caller is already in our system — Name: ${leadInfo.name}, Email: ${leadInfo.email}. Use their first name in your greeting. Do NOT ask for their name or email again.`
     : `This caller is not in our system. After you find out why they called, ask for their name and email before going further.`;
 
-  return `You are Jessica, a phone intake specialist for NEXA Lending. You work for Brandyn Livingston, a senior loan officer in Arizona. You speak naturally on the phone — warm, conversational, brief. Ask only one question at a time. No filler phrases like "Great!" or "Absolutely!".
-
-${known}
-
-════════════════════════════════════════
-GREETING — say this exactly on your very first turn:
-"Thank you for calling NEXA Lending, this is Jessica. What can I help you with today?"
-(If you know their name: "Hi [FirstName], thanks for calling NEXA Lending — this is Jessica. What can I help you with today?")
-Then STOP. Do not say anything else. Wait for them to respond.
-
-CRITICAL RULE: Do NOT mention mortgages, loans, rates, refinancing, down payment assistance, or any financial product until the caller tells you why they called.
+  return `You are Jessica, a warm and professional AI assistant for NEXA Lending.
+Your job is to answer inbound calls, figure out why someone is calling, and gather the right information based on their need.
+${knownCallerNote}
 
 ════════════════════════════════════════
 STEP 1 — LISTEN AND ROUTE
@@ -87,7 +73,7 @@ A) MORTGAGE / REFI — they mention: mortgage, refinance, refi, cash-out, home e
 
 B) PURCHASE / HOME BUYING — they mention: buying a home, purchasing, first-time buyer, looking for a home, pre-approval, down payment
    → Ask: "Are you interested in seeing if you qualify for any Down Payment Assistance programs?"
-     • YES → Go to DPA INTAKE
+     • YES → Go to DPA INTAKE (which flows directly into PURCHASE INTAKE after)
      • NO  → Go to PURCHASE INTAKE (standard)
 
 C) REALTOR / PARTNER — they mention: realtor, agent, broker, referral, partner program, BDM, business development
@@ -127,7 +113,7 @@ MORTGAGE INTAKE — one question at a time, skip if already known:
 7. Employment:
    → "Where do you work, how long have you been there, and what's your position?"
    → "What's your annual income?"
-   → If self-employed: "How long have you been self-employed?" / "What was your taxable income last year after deductions?" / "And the year before?" 
+   → If self-employed: "How long have you been self-employed?" / "What was your taxable income last year after deductions?" / "And the year before?"
       (Note: If they write off a lot → mention: "We actually have loan programs specifically for that — Bank Statement Loans where we use your last 12 months of deposits as income, or a P&L Statement Loan signed by your CPA.")
    → If retired: "Are you on Social Security, a pension, or both? How much per month?"
    → If disabled: "Are you receiving SSDI or VA benefits? How much per month? Are you a veteran?"
@@ -138,14 +124,14 @@ Output [CALL_TYPE: Mortgage] silently.
 ════════════════════════════════════════
 PURCHASE INTAKE — one question at a time, skip if already known:
 
-1. Full name + email (if not already collected)
-2. "What state and city are you looking to buy in?"
-3. "What price range are you thinking?"
+1. Full name + email (if not already collected — skip if DPA already got these)
+2. "What state and city are you looking to buy in?" (skip if DPA already got this)
+3. "What price range are you thinking?" (skip if DPA already got this)
 4. "Have you been pre-approved anywhere yet?"
 5. "Do you already have a realtor?"
-6. "What's your credit score range — are you roughly 740 or above, 680 to 739, 620 to 679, or below 620?"
+6. "What's your credit score range — are you roughly 740 or above, 680 to 739, 620 to 679, or below 620?" (skip if DPA already got this)
 7. "How much do you have saved for a down payment?"
-8. Employment (same as mortgage intake above)
+8. Employment (same as mortgage intake above — skip if DPA already got employment info)
 
 Wrap up: "Great — Brandyn will be in touch with you soon."
 Output [CALL_TYPE: Purchase] silently.
@@ -153,7 +139,9 @@ Output [CALL_TYPE: Purchase] silently.
 ════════════════════════════════════════
 DPA INTAKE — Down Payment Assistance eligibility screening:
 
-Explain briefly: "I'm going to ask you a few quick questions to see which Down Payment Assistance programs you may qualify for."
+IMPORTANT: DPA flows DIRECTLY into PURCHASE INTAKE. After DPA questions are complete, continue seamlessly into the remaining PURCHASE INTAKE questions without re-asking anything already answered. Do NOT wrap up or pause between DPA and Purchase — it is one continuous conversation.
+
+Explain briefly: "I'm going to ask you a few quick questions to see which Down Payment Assistance programs you may qualify for, and then we'll finish getting you set up."
 
 Ask one at a time:
 1. Full name + email (if not already collected)
@@ -165,11 +153,16 @@ Ask one at a time:
 7. "Is this your first time buying a home?" (If no: "Are you a first-generation homebuyer — meaning neither of your parents ever owned a home?")
 8. "How many people are in your household, including yourself?"
 9. "What is your total annual household income from all sources?"
-10. "What's your estimated credit score?"
-11. "What purchase price range are you looking at?"
-12. Employment (same as mortgage intake)
+10. "What's your estimated credit score?" (this also covers Purchase Intake credit score question — don't ask again)
+11. "What purchase price range are you looking at?" (this also covers Purchase Intake price range question — don't ask again)
+12. Employment (same as mortgage intake — this also covers Purchase Intake employment — don't ask again)
 
-Wrap up: "Thank you — I have everything I need to check your eligibility. Brandyn will go over the available programs with you and reach out shortly."
+→ After DPA questions are done, seamlessly continue into PURCHASE INTAKE — only ask the remaining questions NOT already covered:
+   - "Have you been pre-approved anywhere yet?"
+   - "Do you already have a realtor?"
+   - "How much do you have saved for a down payment?"
+
+Final wrap up (after both DPA + Purchase are complete): "Perfect — I've got everything I need. Brandyn will go over the Down Payment Assistance programs available to you and get your purchase application started. He'll be in touch shortly!"
 Output [CALL_TYPE: DPA] silently.
 
 ════════════════════════════════════════
@@ -201,44 +194,26 @@ RULES:
 - Keep responses short and conversational. This is a phone call, not an email.`;
 }
 
-// ─── GPT-4o ───────────────────────────────────────────────────────────────────
-async function chatWithGPT(messages, systemPrompt) {
-  try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [{ role: 'system', content: systemPrompt }, ...messages],
-        temperature: 0.4,
-        max_tokens: 150,
-      }),
-    });
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content?.trim() || "I'm sorry, I didn't catch that. Could you repeat that?";
-  } catch (err) {
-    console.error('GPT error:', err);
-    return "I'm having a little trouble — could you say that again?";
-  }
-}
-
 // ─── Email ────────────────────────────────────────────────────────────────────
 async function sendEmailViaProxy(to, subject, html) {
   try {
+    dlog(`Sending email to ${to} via proxy...`);
     const res = await fetch(`${BASE44_FUNC_BASE}/sendEmailProxy`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'api-key': BASE44_API_KEY },
       body: JSON.stringify({ to, subject, html }),
     });
     const result = await res.json();
-    if (!res.ok || !result.ok) { console.error('sendEmailProxy error:', result); return false; }
-    dlog(`Email sent to ${to}`);
+    if (!res.ok || !result.ok) {
+      console.error('sendEmailProxy error:', result);
+      dlog(`Email FAILED: ${JSON.stringify(result)}`);
+      return false;
+    }
+    dlog(`Email sent OK to ${to} — messageId: ${result.messageId}`);
     return true;
   } catch (err) {
     console.error('sendEmailViaProxy error:', err);
+    dlog(`Email ERROR: ${err.message}`);
     return false;
   }
 }
@@ -253,6 +228,8 @@ async function sendCallSummaryEmail(session) {
     .filter(m => m.role !== 'system')
     .map(m => `${m.role === 'assistant' ? 'Jessica' : 'Caller'}: ${m.content}`)
     .join('\n');
+
+  dlog(`Building summary email — transcript lines: ${transcript.split('\n').length}, callType: ${callType}`);
 
   const htmlTranscript = transcript.split('\n').map(line => {
     if (line.startsWith('Jessica:')) return `<p><strong style="color:#1a56db">Jessica:</strong> ${line.slice(9)}</p>`;
@@ -360,7 +337,7 @@ async function saveLeadToBase44(session) {
 // ─── End of call ──────────────────────────────────────────────────────────────
 async function processEndOfCall(session) {
   try {
-    dlog(`End-of-call processing for ${session.callerPhone}`);
+    dlog(`End-of-call processing for ${session.callerPhone} — messages: ${session.messages?.length || 0}`);
     await Promise.all([
       sendCallSummaryEmail(session),
       saveLeadToBase44(session),
@@ -368,6 +345,7 @@ async function processEndOfCall(session) {
     dlog(`End-of-call complete for ${session.callerPhone}`);
   } catch (err) {
     console.error('processEndOfCall error:', err);
+    dlog(`processEndOfCall ERROR: ${err.message}`);
   }
 }
 
@@ -378,19 +356,34 @@ function stripTokens(text) {
     .replace(/\[INTAKE_COMPLETE\]/g, '')
     .replace(/\[BDM_INTAKE_COMPLETE\]/g, '')
     .replace(/\[BDM_OUT_OF_STATE\]/g, '')
-    .replace(/\[MESSAGE_FOR_BRANDYN\]/g, '')
     .trim();
 }
 
-// ─── Detect call type from AI response tokens ──────────────────────────────────
+// ─── Detect call type from AI output ─────────────────────────────────────────
 function detectCallType(text) {
-  const match = text.match(/\[CALL_TYPE:\s*([^\]]+)\]/);
-  return match ? match[1].trim() : null;
+  const m = text.match(/\[CALL_TYPE:\s*([^\]]+)\]/);
+  return m ? m[1].trim() : null;
 }
 
-// ─── Fastify ──────────────────────────────────────────────────────────────────
+// ─── GPT-4o chat ──────────────────────────────────────────────────────────────
+async function chatWithGPT(messages, systemPrompt) {
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      temperature: 0.5,
+      max_tokens: 300,
+      messages: [{ role: 'system', content: systemPrompt }, ...messages],
+    }),
+  });
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content?.trim() || "I'm sorry, I didn't catch that. Could you repeat that?";
+}
+
+// ─── Fastify setup ────────────────────────────────────────────────────────────
 const fastify = Fastify({ logger: false });
-fastify.register(fastifyFormBody);
+await fastify.register(fastifyFormBody);
 
 fastify.get('/', async () => ({ status: 'Jessica — NEXA Lending AI (ConversationRelay)', ts: new Date().toISOString() }));
 fastify.get('/health', async () => ({ ok: true, ts: new Date().toISOString() }));
@@ -398,12 +391,22 @@ fastify.get('/debug-logs', async () => ({ logs: debugLogs.slice(-100) }));
 
 // ─── Incoming call → ConversationRelay TwiML ──────────────────────────────────
 fastify.post('/incoming-call', async (req, reply) => {
-  const callSid = req.body?.CallSid || `unknown-${Date.now()}`;
-  const callerPhone = req.body?.From || 'unknown';
-  dlog(`Incoming call from ${callerPhone}, SID: ${callSid}`);
+  const callSid = req.body?.CallSid;
+  const from = req.body?.From;
+  dlog(`Incoming call: ${callSid} from ${from}`);
 
+  // Start lead lookup in background
+  if (from) {
+    lookupLead(from).then(lead => {
+      const session = sessions.get(callSid);
+      if (session) session.leadInfo = lead;
+      dlog(`Lead lookup for ${from}: ${lead ? lead.name : 'not found'}`);
+    });
+  }
+
+  // Pre-create session
   sessions.set(callSid, {
-    callerPhone,
+    callerPhone: from || 'unknown',
     leadInfo: null,
     messages: [],
     callType: null,
@@ -411,25 +414,16 @@ fastify.post('/incoming-call', async (req, reply) => {
     endOfCallProcessed: false,
   });
 
-  // Kick off lead lookup in background
-  lookupLeadByPhone(callerPhone).then(lead => {
-    if (sessions.has(callSid)) {
-      sessions.get(callSid).leadInfo = lead;
-      dlog(`Lead lookup for ${callerPhone}: ${lead ? lead.name : 'not found'}`);
-    }
-  });
-
   const host = req.headers.host;
   const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Connect action="https://${host}/call-status" method="POST">
+  <Connect>
     <ConversationRelay url="wss://${host}/conversation-relay"
-      welcomeGreeting=" "
-      ttsProvider="google"
-      voice="en-US-Neural2-F"
-      transcriptionProvider="google"
-      speechModel="telephony"
-      dtmfDetection="true" />
+                       welcomeGreeting=" "
+                       ttsProvider="google"
+                       voice="en-US-Neural2-F"
+                       language="en-US"
+                       interruptible="true" />
   </Connect>
 </Response>`;
 
@@ -545,20 +539,29 @@ wss.on('connection', (ws) => {
     }
   });
 
-  ws.on('close', () => dlog('CR WS closed'));
-  ws.on('error', (err) => dlog(`CR WS error: ${err.message}`));
+  ws.on('close', () => {
+    dlog(`WS closed for ${callSid}`);
+    // Fallback: if call-status webhook hasn't fired, process now
+    if (session && !session.endOfCallProcessed) {
+      session.endOfCallProcessed = true;
+      processEndOfCall(session);
+    }
+  });
 });
 
-// ─── HTTP server + WS upgrade ─────────────────────────────────────────────────
+// ─── HTTP server upgrade → WS ─────────────────────────────────────────────────
+fastify.server.on('upgrade', (req, socket, head) => {
+  if (req.url === '/conversation-relay') {
+    wss.handleUpgrade(req, socket, head, (ws) => {
+      wss.emit('connection', ws, req);
+    });
+  } else {
+    socket.destroy();
+  }
+});
+
+// ─── Start ────────────────────────────────────────────────────────────────────
 fastify.listen({ port: PORT, host: '0.0.0.0' }, (err) => {
   if (err) { console.error(err); process.exit(1); }
-  dlog(`Jessica bridge running on port ${PORT} — ConversationRelay mode`);
-});
-
-fastify.server.on('upgrade', (req, sock, head) => {
-  if (req.url === '/conversation-relay') {
-    wss.handleUpgrade(req, sock, head, (ws) => wss.emit('connection', ws, req));
-  } else {
-    sock.destroy();
-  }
+  console.log(`Jessica bridge running on port ${PORT}`);
 });
