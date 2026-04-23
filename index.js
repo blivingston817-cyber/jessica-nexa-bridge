@@ -705,6 +705,7 @@ function detectCallType(text) {
 // ─── GPT-4o chat ──────────────────────────────────────────────────────────────
 async function chatWithGPT(messages, systemPrompt) {
  try {
+ const callStart = Date.now();
  const controller = new AbortController();
  const timeout = setTimeout(() => controller.abort(), 9000);
  const res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -722,17 +723,26 @@ async function chatWithGPT(messages, systemPrompt) {
  if (!res.ok) {
  const errText = await res.text();
  console.error(`OpenAI error ${res.status}: ${errText}`);
+ dlog(`OpenAI HTTP error ${res.status}: ${errText.substring(0,200)}`);
  return "[SILENT_RETRY]";
  }
  const data = await res.json();
- const reply = data.choices?.[0]?.message?.content?.trim();
- if (!reply) {
- console.error('OpenAI returned empty content:', JSON.stringify(data));
+ if (data.error) {
+ console.error('OpenAI API error:', JSON.stringify(data.error));
+ dlog(`OpenAI API error: ${JSON.stringify(data.error)}`);
  return "[SILENT_RETRY]";
  }
+ const reply = data.choices?.[0]?.message?.content?.trim();
+ if (!reply) {
+ console.error('OpenAI empty reply. Full response:', JSON.stringify(data).substring(0,300));
+ dlog(`OpenAI empty reply: ${JSON.stringify(data).substring(0,200)}`);
+ return "[SILENT_RETRY]";
+ }
+ dlog(`GPT replied in ${Date.now() - callStart}ms`);
  return reply;
  } catch (err) {
  console.error('chatWithGPT error:', err.message);
+ dlog(`chatWithGPT exception: ${err.message}`);
  return "[SILENT_RETRY]";
  }
 }
@@ -876,7 +886,8 @@ wss.on('connection', (ws) => {
  // GPT failed silently — move to next question without drawing attention to it
  const retryMessages = [...session.messages, { role: 'user', content: 'Continue naturally with your next intake question.' }];
  const retryRaw = await chatWithGPT(retryMessages, session.systemPrompt);
- const retryVisible = stripTokens(retryRaw);
+ // If retry also fails, just send a neutral bridge phrase — never expose the token
+ let retryVisible = retryRaw.includes('[SILENT_RETRY]') ? "And just to keep things moving — " : stripTokens(retryRaw);
  session.messages.push({ role: 'assistant', content: retryVisible });
  ws.send(JSON.stringify({ type: 'text', token: retryVisible, last: true }));
  return;
