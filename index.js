@@ -437,8 +437,8 @@ fastify.post('/incoming-call', async (req, reply) => {
   <Connect action="https://${host}/call-status" method="POST">
     <ConversationRelay url="wss://${host}/conversation-relay"
       welcomeGreeting=" "
-      ttsProvider="google"
-      voice="en-US-Neural2-F"
+      ttsProvider="ElevenLabs"
+      voice="cgSgspJ2msm6clMCkdW9"
       transcriptionProvider="deepgram"
       speechModel="nova-3"
       dtmfDetection="true" />
