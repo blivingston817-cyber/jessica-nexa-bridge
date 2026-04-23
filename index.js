@@ -520,7 +520,11 @@ RULES:
 - CRITICAL — THIS IS A VOICE CALL: Never use any markdown formatting in your spoken responses. No asterisks (*), no double asterisks (**), no bullet points, no dashes used as bullets, no pound signs (#), no underscores, no brackets. If you use any of these characters they will be read aloud literally and sound robotic and broken. Speak in plain natural sentences only, like you are talking to someone face to face.
 - Never say the word "asterisk" or any formatting character out loud. Ever.
 - Do NOT wait to be prompted to explain DPA programs. After collecting the eligibility info in Part 1, immediately and proactively move into Part 2 — tell them what programs they qualify for, what those programs cover, and what documents they will need. Do not pause and wait for the caller to ask. This is YOUR job to lead that conversation.
-- If the caller is hard to understand, ask them to repeat themselves once in a natural friendly way — never make them feel bad about it. Say something like "Sorry, I didn't quite catch that — could you say that one more time for me?"`;
+- If the caller is hard to understand, ask them to repeat themselves once in a natural friendly way — never make them feel bad about it. Say something like "Sorry, I didn't quite catch that — could you say that one more time for me?"
+- If you only partially heard what they said — use what you did catch and make a reasonable guess. For example if someone says "two fifty" assume they mean two hundred fifty thousand dollars in a mortgage context. Confirm it back: "Did you say two hundred fifty thousand?" rather than asking them to repeat entirely.
+- Never interrupt the caller while they are mid-sentence. Wait until they have fully finished speaking before responding.
+- Keep your responses short when asking questions — one question at a time, brief and conversational. Long responses make it harder for the caller to engage.
+- If the caller gives a short one or two word answer, accept it and move on. Do not ask them to elaborate unless it is truly necessary.`;
 }
 
 // ─── Email ────────────────────────────────────────────────────────────────────
@@ -752,6 +756,8 @@ fastify.post('/incoming-call', async (req, reply) => {
  ttsProvider="ElevenLabs"
  voice="cgSgspJ2msm6clMCkdW9"
  language="en-US"
+ transcriptionProvider="deepgram"
+ speechModel="nova-2-phonecall"
  interruptible="true" />
  </Connect>
 </Response>`;
