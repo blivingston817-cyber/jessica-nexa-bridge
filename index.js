@@ -439,8 +439,8 @@ fastify.post('/incoming-call', async (req, reply) => {
       welcomeGreeting=" "
       ttsProvider="google"
       voice="en-US-Neural2-F"
-      transcriptionProvider="google"
-      speechModel="telephony"
+      transcriptionProvider="deepgram"
+      speechModel="nova-3"
       dtmfDetection="true" />
   </Connect>
 </Response>`;
