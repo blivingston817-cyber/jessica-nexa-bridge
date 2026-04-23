@@ -761,8 +761,9 @@ fastify.post('/incoming-call', async (req, reply) => {
  voice="cgSgspJ2msm6clMCkdW9"
  language="en-US"
  transcriptionProvider="deepgram"
- speechModel="nova-2-phonecall"
- interruptible="true" />
+ speechModel="nova-3-general"
+ interruptible="true"
+ hints="refinance,mortgage,NEXA,FHA,VA,USDA,conventional,down payment,escrow,homeowners insurance,property taxes,W-2,pay stubs,bank statements,pre-approval,credit score,interest rate,cash out,home equity,HELOC,self-employed,Social Security,pension,taxable income,bank statement loan,profit and loss,co-borrower,primary residence,investment property,driver license,declarations page,loan officer,Brandyn,Livingston,nexalending" />
  </Connect>
 </Response>`;
 
